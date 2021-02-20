@@ -32,8 +32,8 @@ iso_df = pd.read_csv("wikipedia-iso-country-codes.csv")
 print(vaccine_df)
 
 #merge df with iso_df so we have the iso code for the countries listed:
-df=pd.merge(vaccine_df, iso_df, left_on="location", right_on="Name")  #merge county an survey on fibs
-df.drop(['Name', 'Alpha-2 code', 'Numeric code', 'ISO 3166-2'], axis=1, inplace=True)
+df=pd.merge(vaccine_df, iso_df, left_on="location", right_on="English short name lower case")  #merge county an survey on fibs
+df.drop(['English short name lower case', 'Alpha-2 code', 'Numeric code', 'ISO 3166-2'], axis=1, inplace=True)
 print(df)
 print("-----------------------------------------------------------")
 # df_sorted = df.sort_values(by='vaccine')
@@ -43,6 +43,7 @@ print("-----------------------------------------------------------")
 print("----------------------********-------------------------------------")
 df_pfizer = df[df['vaccine'] == 'Pfizer/BioNTech']
 df_pfizer.drop(['date'], axis=1, inplace=True)
+print(df_pfizer)
 # df_pfizer.groupby(['total_vaccinations'])
 # print(df_pfizer['total_vaccinations'].aggregate({'total_vaccinations': np.sum}))
 
@@ -63,9 +64,9 @@ print(df_oxford)
 print("-----------------------------------------------------------")
 figure = go.Figure(
     data=go.Choropleth(
-        z=df_moderna['total_vaccinations'], #country the vaccine is used in
-        locations=df_moderna['Alpha-3 code'],
-        text=df_moderna['location'],
+        z=df_oxford['total_vaccinations'], #country the vaccine is used in
+        locations=df_oxford['Alpha-3 code'],
+        text=df_oxford['location'],
         locationmode="ISO-3",
         autocolorscale=True,
 
@@ -73,7 +74,7 @@ figure = go.Figure(
 )
 
 figure.update_layout(
-    title_text="Vaccinations - Moderna",
+    title_text="Vaccinations - Oxford",
     geo_scope='world',
 )
 

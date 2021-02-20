@@ -1,4 +1,4 @@
-Name,Alpha-2 code,Alpha-3 code,Numeric code,ISO 3166-2
+English short name lower case,Alpha-2 code,Alpha-3 code,Numeric code,ISO 3166-2
 Afghanistan,AF,AFG,4,ISO 3166-2:AF
 Åland Islands,AX,ALA,248,ISO 3166-2:AX
 Albania,AL,ALB,8,ISO 3166-2:AL
@@ -231,7 +231,7 @@ Uganda,UG,UGA,800,ISO 3166-2:UG
 Ukraine,UA,UKR,804,ISO 3166-2:UA
 United Arab Emirates,AE,ARE,784,ISO 3166-2:AE
 United Kingdom,GB,GBR,826,ISO 3166-2:GB
-United States Of America,US,USA,840,ISO 3166-2:US
+United States of America,US,USA,840,ISO 3166-2:US
 United States Minor Outlying Islands,UM,UMI,581,ISO 3166-2:UM
 Uruguay,UY,URY,858,ISO 3166-2:UY
 Uzbekistan,UZ,UZB,860,ISO 3166-2:UZ
