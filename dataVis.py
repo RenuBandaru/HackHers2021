@@ -78,7 +78,7 @@ figure.update_layout(
     geo_scope='world',
 )
 
-vaccineOptions=['Moderna', 'Oxford/AstraZeneca', 'Pfizer/BIONTech', 'Sinovac']
+vaccineOptions=['Moderna', 'Oxford/AstraZeneca', 'Pfizer/BioNTech', 'Sinovac']
 app.layout = html.Div(
     [
         html.H1("HackHers Covid Dashboard (Global ._.)"),
@@ -103,7 +103,6 @@ vaccineDict = {
 @app.callback(Output("main_graph", "figure"),
               [Input("data_select", "value")])
 def update_fig(value):
-    print(vaccineDict['Moderna'])
     df_update = vaccineDict[value]
     print("value passed in: " + str(value))
     figure = go.Figure(
