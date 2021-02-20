@@ -78,6 +78,7 @@ figure.update_layout(
     geo_scope='world',
 )
 
+vaccineOptions=['Moderna', 'Oxford/AstraZeneca', 'Pfizer/BIONTech', 'Sinovac']
 app.layout = html.Div(
     [
         html.H1("HackHers Covid Dashboard (Global ._.)"),
@@ -87,24 +88,34 @@ app.layout = html.Div(
         ),
         dcc.Dropdown(
             id='data_select',
-            options=[{'label': col, 'value': col} for col in df.columns.values[3:]]
+            options=[{'label': col, 'value': col} for col in vaccineOptions]
         )
     ])
 
+vaccineDict = {
+        "Moderna": df_moderna,
+        "Oxford/AstraZeneca": df_oxford,
+        "Pfizer/BioNTech": df_pfizer,
+        "Sinovac": df_sinovac
+    }
+    #use this to map input to the correct dataframe
 
 @app.callback(Output("main_graph", "figure"),
               [Input("data_select", "value")])
 def update_fig(value):
+    print(vaccineDict['Moderna'])
+    df_update = vaccineDict[value]
+    print("value passed in: " + str(value))
     figure = go.Figure(
         data=go.Choropleth(
-            z=df_moderna[value],
-            locations=df_moderna['location'],
+            z=df_update['total_vaccinations'],
+            locations=df_update['Alpha-3 code'],
             locationmode="ISO-3",
             autocolorscale=True,
         )
     )
     figure.update_layout(
-        titl_text=value,
+        title_text=value,
     )
     return figure
 
