@@ -26,8 +26,15 @@ print("folium imported!")
 import numpy as np
 
 app = dash.Dash()
-df = pd.read_csv("vaccinations-by-manufacturer.csv")
-#print(df)
+vaccine_df = pd.read_csv("vaccinations-by-manufacturer.csv")
+iso_df = pd.read_csv("wikipedia-iso-country-codes.csv")
+
+print(vaccine_df)
+
+#merge df with iso_df so we have the iso code for the countries listed:
+df=pd.merge(vaccine_df, iso_df, left_on="location", right_on="Name")  #merge county an survey on fibs
+df.drop(['Name', 'Alpha-2 code', 'Numeric code', 'ISO 3166-2'], axis=1, inplace=True)
+print(df)
 print("-----------------------------------------------------------")
 # df_sorted = df.sort_values(by='vaccine')
 # print(df_sorted)
@@ -56,8 +63,9 @@ print(df_oxford)
 print("-----------------------------------------------------------")
 figure = go.Figure(
     data=go.Choropleth(
-        z=df_moderna['location'], #country the vaccine is used in
-        locations=df_moderna['location'],
+        z=df_moderna['total_vaccinations'], #country the vaccine is used in
+        locations=df_moderna['Alpha-3 code'],
+        text=df_moderna['location'],
         locationmode="ISO-3",
         autocolorscale=True,
 
@@ -65,7 +73,7 @@ figure = go.Figure(
 )
 
 figure.update_layout(
-    title_text="Vaccinations",
+    title_text="Vaccinations - Moderna",
     geo_scope='world',
 )
 
