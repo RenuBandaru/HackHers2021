@@ -18,10 +18,16 @@ import plotly.graph_objects as go
 import plotly.express as px
 import plotly.offline as po
 print("Plotly imported!")
-app = dash.Dash()
 
+import folium
+world = folium.Map(location=[0,0], zoom_start=2)
+print("folium imported!")
+
+import numpy as np
+
+app = dash.Dash()
 df = pd.read_csv("vaccinations-by-manufacturer.csv")
-print(df)
+#print(df)
 print("-----------------------------------------------------------")
 # df_sorted = df.sort_values(by='vaccine')
 # print(df_sorted)
@@ -29,15 +35,20 @@ print("-----------------------------------------------------------")
 # print(vaccineGroups[])
 print("----------------------********-------------------------------------")
 df_pfizer = df[df['vaccine'] == 'Pfizer/BioNTech']
-print(df_pfizer)
+df_pfizer.drop(['date'], axis=1, inplace=True)
+# df_pfizer.groupby(['total_vaccinations'])
+# print(df_pfizer['total_vaccinations'].aggregate({'total_vaccinations': np.sum}))
 
 df_sinovac = df[df['vaccine'] == 'Sinovac']
+df_sinovac.drop(['date'], axis=1, inplace=True)
 print(df_sinovac)
 
 df_moderna = df[df['vaccine'] == 'Moderna']
+df_moderna.drop(['date'], axis=1, inplace=True)
 print(df_moderna)
 
 df_oxford = df[df['vaccine'] == 'Oxford/AstraZeneca']
+df_oxford.drop(['date'], axis=1, inplace=True)
 print(df_oxford)
 
 # df_today = df.loc[df['date'] == df_sorted["date"][0]]
@@ -47,20 +58,20 @@ figure = go.Figure(
     data=go.Choropleth(
         z=df_moderna['location'], #country the vaccine is used in
         locations=df_moderna['location'],
-        locationmode="USA-states",
+        locationmode="ISO-3",
         autocolorscale=True,
 
     )
 )
 
 figure.update_layout(
-    title_text="Deaths",
-    geo_scope='usa',
+    title_text="Vaccinations",
+    geo_scope='world',
 )
 
 app.layout = html.Div(
     [
-        html.H1("HackPSU Covid Dashboard (US)"),
+        html.H1("HackHers Covid Dashboard (Global ._.)"),
         dcc.Graph(
             id='main_graph',
             figure=figure,
@@ -79,7 +90,7 @@ def update_fig(value):
         data=go.Choropleth(
             z=df_moderna[value],
             locations=df_moderna['location'],
-            locationmode="USA-states",
+            locationmode="ISO-3",
             autocolorscale=True,
         )
     )
