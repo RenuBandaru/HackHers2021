@@ -123,13 +123,25 @@ figure = go.Figure(
         locations=df_oxford['iso_code'],
         text=df_oxford['English short name lower case'],
         locationmode="ISO-3",
-        autocolorscale=True,
+        colorscale='Blues',
 
     )
 )
-
+figure.add_layout_image(
+        dict(
+            source="earth space.jpg",
+            xref="x",
+            yref="y",
+            x=0,
+            y=3,
+            sizex=2,
+            sizey=2,
+            sizing="stretch",
+            opacity=0.1,
+            layer="below")
+)
 figure.update_layout(
-    title_text="Vaccinations - Oxford",
+    title_text="Which vaccines are used and in which countries?",
     geo_scope='world',
 )
 
@@ -146,6 +158,8 @@ app.layout = html.Div(
             id='data_select',
             options=[{'label': col, 'value': col} for col in vaccineOptions]
         )
+
+
     ])
 
 vaccineDict = {
