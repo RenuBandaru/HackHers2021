@@ -129,7 +129,7 @@ figure = go.Figure(
 )
 figure.add_layout_image(
         dict(
-            source="earth space.jpg",
+            source="https://staticwordpress.s3.amazonaws.com/blog.luxuryhomemarketing.com/uploads/2020/03/Bonus_BP01-Power-Market-Photo-scaled.jpg",
             xref="x",
             yref="y",
             x=0,
@@ -157,6 +157,25 @@ app.layout = html.Div(
         dcc.Dropdown(
             id='data_select',
             options=[{'label': col, 'value': col} for col in vaccineOptions]
+        ),
+        html.H1("Which country is vaccinating a larger percent of its population?"),
+        html.Div(
+            children=html.Img(
+                src="https://raw.githubusercontent.com/RenuBandaru/HackHers2021/main/Ques_3.png",
+                style={
+                    'maxWidth': '100%',
+                    'maxHeight': '100%',
+                    'marginLeft': 'auto',
+                    'marginRight': 'auto'
+                }
+            ),
+            style={
+                'maxWidth': '100%',
+                'maxHeight': '100%',
+                'marginLeft': 'auto',
+                'marginRight': 'auto',
+                'border': 'thin grey solid'
+            }
         )
 
 
