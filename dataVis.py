@@ -59,28 +59,28 @@ print("-----------------------------------------------------------")
 # print(vaccineGroups[])
 print("----------------------****VACCINE DFS: ****-------------------------------------")
 
-df_covaxin = df[df['vaccine'] == 'Covaxin']
-#df_moderna.drop(['date'], axis=1, inplace=True)
-print(df_covaxin)
-print("\n")
 
-df_jj = df[df['vaccine'] == 'Johnson&Johnson']
-#df_moderna.drop(['date'], axis=1, inplace=True)
-print(df_jj)
-print("\n")
-
-
-print("\n" + "ORIGINAL DATAFRAME !!!!!!!!!!!!!!!!!!!!!!!!")
-print(df)
-print("\n")
-
+# df_covaxin = df[df['vaccine'] == 'Covaxin']
+# #df_moderna.drop(['date'], axis=1, inplace=True)
+# print(df_covaxin)
+# print("\n")
+#
+# df_jj = df[df['vaccine'] == 'Johnson&Johnson']
+# #df_moderna.drop(['date'], axis=1, inplace=True)
+# print(df_jj)
+# print("\n")
+#
+#
+# print("vvvvvvvvvvvvvvvvvvv \n" + "ORIGINAL DATAFRAME vvvvvvvvvvvvvv")
+# print(df.tail(10))
+# print("\n")
+# breakpoint(0)
+#
 df_moderna = df[df['vaccine'] == 'Moderna']
 #df_moderna.drop(['date'], axis=1, inplace=True)
 print(df_moderna)
 print("\n")
-print("\n" + "ORIGINAL DATAFRAME !!!!!!!!!!!!!!!!!!!!!!!!")
-print(df)
-print("\n")
+
 
 df_oxford = df[df['vaccine'] == 'Oxford/AstraZeneca']
 #df_oxford.drop(['date'], axis=1, inplace=True)
@@ -99,7 +99,7 @@ df_sinopharmB = df[df['vaccine'] == 'Sinopharm/Beijing']
 print(df_sinopharmB)
 print("\n")
 
-df_sinopharmW = df[df['vaccine'] == 'Sinopharm/Beijing']
+df_sinopharmW = df[df['vaccine'] == 'Sinopharm/Wuhan']
 #df_sinovac.drop(['date'], axis=1, inplace=True)
 print(df_sinopharmW)
 print("\n")
@@ -119,9 +119,9 @@ print("\n")
 print("-----------------------------------------------------------")
 figure = go.Figure(
     data=go.Choropleth(
-        z=df_oxford['use'], #country the vaccine is used in
-        locations=df_oxford['iso_code'],
-        text=df_oxford['English short name lower case'],
+        z=df_pfizer['use'], #country the vaccine is used in
+        locations=df_pfizer['iso_code'],
+        text=df_pfizer['English short name lower case'],
         locationmode="ISO-3",
         autocolorscale=True,
 
@@ -149,10 +149,10 @@ app.layout = html.Div(
     ])
 
 vaccineDict = {
-        "Covaxin": df_covaxin,
-        "Johnson&Johnson": df_jj,
-        "Moderna": df_moderna,
-        "Oxford/AstraZeneca": df_oxford,
+        # "Covaxin": df_covaxin,
+        # "Johnson&Johnson": df_jj,
+        # "Moderna": df_moderna,
+        # "Oxford/AstraZeneca": df_oxford,
         "Pfizer/BioNTech": df_pfizer,
         "Sinopharm/Beijing": df_sinopharmB,
         "Sinopharm/W": df_sinopharmW,
