@@ -28,12 +28,19 @@ import numpy as np
 app = dash.Dash()
 vaccine_df = pd.read_csv("vaccinations-by-manufacturer.csv")
 iso_df = pd.read_csv("wikipedia-iso-country-codes.csv")
+locations_df = pd.read_csv("locations.csv")
 
-print(vaccine_df)
+#print(vaccine_df)
 
-#merge df with iso_df so we have the iso code for the countries listed:
+# #merge df with iso_df so we have the iso code for the countries listed:
+# df = pd.DataFrame(locations_df.vaccines.str.split(',').tolist(), index=locations_df.location)
+# df = df.reset_index([0, 'location'])
+# #df.columns=['location', 'iso_code', 'vaccines']
+# print(df)
+print("---------------------------------------------------------")
+
 df=pd.merge(vaccine_df, iso_df, left_on="location", right_on="English short name lower case")  #merge county an survey on fibs
-df.drop(['English short name lower case', 'Alpha-2 code', 'Numeric code', 'ISO 3166-2'], axis=1, inplace=True)
+#df.drop(['English short name lower case', 'Alpha-2 code', 'Numeric code', 'ISO 3166-2'], axis=1, inplace=True)
 print(df)
 print("-----------------------------------------------------------")
 # df_sorted = df.sort_values(by='vaccine')
