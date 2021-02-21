@@ -51,7 +51,7 @@ df=pd.merge(df, iso_df, left_on="iso_code", right_on="Alpha-3 code")  #merge cou
 df.drop(['Alpha-2 code','Alpha-3 code', 'Numeric code', 'ISO 3166-2'], axis=1, inplace=True)
 df['use'] = 1
 
-df = df.rename(columns = {'English short name lower case':'location'})
+#df = df.rename(columns = {'English short name lower case':'location'})
 #merge df with iso_df so we have the iso code for the countries listed:
 #df=pd.merge(vaccine_df, iso_df, left_on="location", right_on="English short name lower case")  #merge county an survey on fibs
 #df.drop(['English short name lower case', 'Alpha-2 code', 'Numeric code', 'ISO 3166-2'], axis=1, inplace=True)
@@ -188,7 +188,7 @@ vaccineOptions=['Covaxin', 'Johnson&Johnson', 'Moderna', 'Oxford/AstraZeneca', '
                 'Sinopharm/Wuhan', 'Sinovac', 'Sputnik']
 app.layout = html.Div(
     [
-        html.H1("HackHers Covid Dashboard (Global ._.)"),
+        html.H1("HackHers Covid Dashboard (Global Version 🌏)"),
         dcc.Graph(
             id='main_graph',
             figure=figure,
@@ -200,10 +200,10 @@ app.layout = html.Div(
     ])
 
 vaccineDict = {
-        # "Covaxin": df_covaxin,
-        # "Johnson&Johnson": df_jj,
-        # "Moderna": df_moderna,
-        # "Oxford/AstraZeneca": df_oxford,
+        "Covaxin": df_covaxin,
+        "Johnson&Johnson": df_jj,
+        "Moderna": df_moderna,
+        "Oxford/AstraZeneca": df_oxford,
         "Pfizer/BioNTech": df_pfizer,
         "Sinopharm/Beijing": df_sinopharmB,
         "Sinopharm/W": df_sinopharmW,
@@ -221,7 +221,7 @@ def update_fig(value):
         data=go.Choropleth(
             z=df_update['use'],
             locations=df_update['iso_code'],
-            text=df_oxford['location'],
+            text=df_oxford['English short name lower case'],
             autocolorscale=True,            
         )
     )

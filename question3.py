@@ -19,7 +19,7 @@ df=pd.merge(vaccinations_df, country_pop_df, left_on="iso_code", right_on="Count
 #df.drop(['Alpha-2 code','Alpha-3 code', 'Numeric code', 'ISO 3166-2'], axis=1, inplace=True)
 #pd.set_option('display.max_rows', df.shape[0]+1)
 
-df['percentVac'] = df['total_vaccinations']/df['population']
+df['percentVac'] = (df['total_vaccinations']/df['population']*100)
 
 
 #df=pd.merge(result, country_pop_df, left_on="iso_code", right_on="CountryAlpha3Code") 
@@ -27,10 +27,28 @@ df['percentVac'] = df['total_vaccinations']/df['population']
 #result=pd.pivot_table(vaccinations_df,index=["location"],values=["daily_vaccinations"],aggfunc='sum')
 result=pd.pivot_table(df,index=["location", "iso_code","population"],values=["total_vaccinations","percentVac"],aggfunc='max')
 
+result.reset_index(inplace=True)
+
 pd.set_option('display.max_rows', result.shape[0]+1)
 print(result)
 
 print('----------------------------------------------- \n')
 
+#result.plot.bar(stacked=True)
+#result.plot.bar(subplots=True)
 
+#plot.show()
 
+final_df = pd.DataFrame(result)
+
+print("\n\n ----------printing final_df-----------")
+print(final_df)
+#print(final_df['location'])
+#final_df.plot.bar(x='location', y='percentVac')
+
+percent_plot = final_df.plot.bar(x='location', y='percentVac')
+percent_plot.set_xlabel("Countries")
+percent_plot.set_ylabel("Rate of Vaccination Percentage")
+percent_plot.set_title("Which country is vaccinating a larger percent of its population?")
+
+plot.show()
