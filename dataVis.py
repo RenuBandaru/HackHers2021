@@ -83,7 +83,7 @@ print(df)
 
 print("----------------------****VACCINE DFS: ****-------------------------------------")
 
-
+#set up dataframes for each vaccine so map can be displayed
 df_covaxin = df[df['vaccine'] == 'Covaxin']
 #df_moderna.drop(['date'], axis=1, inplace=True)
 print(df_covaxin)
@@ -94,26 +94,6 @@ df_jj = df[df['vaccine'] == 'Johnson&Johnson']
 print(df_jj)
 print("\n")
 
-#print("\n" + "ORIGINAL DATAFRAME !!!!!!!!!!!!!!!!!!!!!!!!")
-#print(df)
-#print("\n")
-
-# df_covaxin = df[df['vaccine'] == 'Covaxin']
-# #df_moderna.drop(['date'], axis=1, inplace=True)
-# print(df_covaxin)
-# print("\n")
-#
-# df_jj = df[df['vaccine'] == 'Johnson&Johnson']
-# #df_moderna.drop(['date'], axis=1, inplace=True)
-# print(df_jj)
-# print("\n")
-#
-#
-# print("vvvvvvvvvvvvvvvvvvv \n" + "ORIGINAL DATAFRAME vvvvvvvvvvvvvv")
-# print(df.tail(10))
-# print("\n")
-# breakpoint(0)
-#
 df_moderna = df[df['vaccine'] == 'Moderna']
 #df_moderna.drop(['date'], axis=1, inplace=True)
 print(df_moderna)
@@ -167,6 +147,7 @@ print("\n")
 # df_today = df.loc[df['date'] == df_sorted["date"][0]]
 # print(df_today)
 print("-----------------------------------------------------------")
+#initial dash setup
 figure = go.Figure(
     data=go.Choropleth(
 
@@ -183,7 +164,7 @@ figure.update_layout(
     title_text="Vaccinations - Oxford",
     geo_scope='world',
 )
-
+#dropdown menu options
 vaccineOptions=['Covaxin', 'Johnson&Johnson', 'Moderna', 'Oxford/AstraZeneca', 'Pfizer/BioNTech', 'Sinopharm/Beijing',
                 'Sinopharm/Wuhan', 'Sinovac', 'Sputnik']
 app.layout = html.Div(
@@ -198,7 +179,7 @@ app.layout = html.Div(
             options=[{'label': col, 'value': col} for col in vaccineOptions]
         )
     ])
-
+#use this to map input to the correct dataframe
 vaccineDict = {
         "Covaxin": df_covaxin,
         "Johnson&Johnson": df_jj,
@@ -210,7 +191,7 @@ vaccineDict = {
         "Sinovac": df_sinovac,
         "Sputnik": df_sputnik
     }
-    #use this to map input to the correct dataframe
+
 
 @app.callback(Output("main_graph", "figure"),
               [Input("data_select", "value")])
