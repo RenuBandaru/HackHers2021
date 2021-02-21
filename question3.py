@@ -20,7 +20,8 @@ df=pd.merge(vaccinations_df, country_pop_df, left_on="iso_code", right_on="Count
 #pd.set_option('display.max_rows', df.shape[0]+1)
 
 df['percentVac'] = df['total_vaccinations']/df['population'] * 100
-
+# df.plot.bar(stacked=True)
+# df.plot.bar(subplots=True)
 
 #df=pd.merge(result, country_pop_df, left_on="iso_code", right_on="CountryAlpha3Code") 
 #result=pd.pivot_table(vaccinations_df,index=["location","iso_code"],values=["total_vaccinations"],aggfunc='max')
