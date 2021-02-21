@@ -35,10 +35,14 @@ location_df = pd.read_csv("locations.csv")
 location_df.drop(['last_observation_date','source_name','source_website'],axis=1,inplace=True)
 
 df = pd.DataFrame(location_df.vaccines.str.split(',').tolist(), index=location_df.iso_code).stack()
+print(df)
 
 df = df.reset_index([0, 'iso_code'])
+print(df)
 
+print("*****")
 df.columns = ['iso_code', 'vaccine']
+print(df)
 
 print("splitting done")
 
@@ -53,11 +57,17 @@ df = df.rename(columns = {'English short name lower case':'location'})
 #df.drop(['English short name lower case', 'Alpha-2 code', 'Numeric code', 'ISO 3166-2'], axis=1, inplace=True)
 pd.set_option('display.max_rows', df.shape[0]+1)
 
+#df=pd.merge(df, iso_df, left_on="iso_code", right_on="Alpha-3 code")  #merge county an survey on fibs
+#df.drop(['Alpha-3 code','Alpha-2 code', 'Numeric code', 'ISO 3166-2','English short name lower case'], axis=1, inplace=True)
+#df['use'] = 1
+
+print("final DF: ^^^^^^^^^^^^^^^^^^^")
+#pd.set_option('display.max_rows', df.shape[0]+1)
 print(df)
 
-print('\n \n')
-df.sort_values('vaccine')
-print(df)
+#print('\n \n')
+#df.sort_values('vaccine')
+#print(df)
 
 print("-----------------------------------------------------------")
 # df_sorted = df.sort_values(by='vaccine')
@@ -66,15 +76,60 @@ print("-----------------------------------------------------------")
 # print(vaccineGroups[])
 print("----------------------********-------------------------------------")
 #df_pfizer =df.loc[df['vaccine']=='Pfizer/BioNtech']
+
+print("\n")
+print("\n" + "ORIGINAL DATAFRAME !!!!!!!!!!!!!!!!!!!!!!!!")
+print(df)
+
+print("----------------------****VACCINE DFS: ****-------------------------------------")
+
+df_covaxin = df[df['vaccine'] == 'Covaxin']
+#df_moderna.drop(['date'], axis=1, inplace=True)
+print(df_covaxin)
+print("\n")
+
+df_jj = df[df['vaccine'] == 'Johnson&Johnson']
+#df_moderna.drop(['date'], axis=1, inplace=True)
+print(df_jj)
+print("\n")
+
+#print("\n" + "ORIGINAL DATAFRAME !!!!!!!!!!!!!!!!!!!!!!!!")
+#print(df)
+#print("\n")
+
+df_moderna = df[df['vaccine'] == 'Moderna']
+#df_moderna.drop(['date'], axis=1, inplace=True)
+print(df_moderna)
+
+print("\n")
+
+df_oxford = df[df['vaccine'] == 'Oxford/AstraZeneca']
+#df_oxford.drop(['date'], axis=1, inplace=True)
+print(df_oxford)
+print("\n")
+
 df_pfizer = df[df['vaccine'] == 'Pfizer/BioNTech']
+#df_pfizer = df.loc[df['vaccine']] == ['Pfizer/BioNTech']
 #df_pfizer.drop(['date'], axis=1, inplace=True)
 print(df_pfizer)
+print("\n")
+
 # df_pfizer.groupby(['total_vaccinations'])
 # print(df_pfizer['total_vaccinations'].aggregate({'total_vaccinations': np.sum}))
+df_sinopharmB = df[df['vaccine'] == 'Sinopharm/Beijing']
+#df_sinovac.drop(['date'], axis=1, inplace=True)
+print(df_sinopharmB)
+print("\n")
+
+df_sinopharmW = df[df['vaccine'] == 'Sinopharm/Wuhan']
+#df_sinovac.drop(['date'], axis=1, inplace=True)
+print(df_sinopharmW)
+print("\n")
 
 df_sinovac = df[df['vaccine'] == 'Sinovac']
 #df_sinovac.drop(['date'], axis=1, inplace=True)
 print(df_sinovac)
+print("\n")
 
 df_moderna = df[df['vaccine'] == 'Moderna']
 #df_moderna.drop(['date'], axis=1, inplace=True)
@@ -83,6 +138,10 @@ print(df_moderna)
 df_oxford = df[df['vaccine'] == 'Oxford/AstraZeneca']
 #df_oxford.drop(['date'], axis=1, inplace=True)
 print(df_oxford)
+df_sputnik = df[df['vaccine'] == 'Sputnik V']
+#df_sinovac.drop(['date'], axis=1, inplace=True)
+print(df_sputnik)
+print("\n")
 
 # df_today = df.loc[df['date'] == df_sorted["date"][0]]
 # print(df_today)
@@ -92,6 +151,7 @@ figure = go.Figure(
         z=df_oxford['use'], #country the vaccine is used in
         locations=df_oxford['iso_code'],
         text=df_oxford['location'],
+        #text=df_oxford['English short name lower case'],
         locationmode="ISO-3",
         autocolorscale=True,
 
@@ -103,7 +163,8 @@ figure.update_layout(
     geo_scope='world',
 )
 
-vaccineOptions=['Moderna', 'Oxford/AstraZeneca', 'Pfizer/BioNTech', 'Sinovac']
+vaccineOptions=['Covaxin', 'Johnson&Johnson', 'Moderna', 'Oxford/AstraZeneca', 'Pfizer/BioNTech', 'Sinopharm/Beijing',
+                'Sinopharm/Wuhan', 'Sinovac', 'Sputnik']
 app.layout = html.Div(
     [
         html.H1("HackHers Covid Dashboard (Global ._.)"),
@@ -118,10 +179,15 @@ app.layout = html.Div(
     ])
 
 vaccineDict = {
+        "Covaxin": df_covaxin,
+        "Johnson&Johnson": df_jj,
         "Moderna": df_moderna,
         "Oxford/AstraZeneca": df_oxford,
         "Pfizer/BioNTech": df_pfizer,
-        "Sinovac": df_sinovac
+        "Sinopharm/Beijing": df_sinopharmB,
+        "Sinopharm/W": df_sinopharmW,
+        "Sinovac": df_sinovac,
+        "Sputnik": df_sputnik
     }
     #use this to map input to the correct dataframe
 
@@ -135,8 +201,7 @@ def update_fig(value):
             z=df_update['use'],
             locations=df_update['iso_code'],
             text=df_oxford['location'],
-            locationmode="ISO-3",
-            autocolorscale=True,
+            autocolorscale=True,            
         )
     )
     figure.update_layout(
