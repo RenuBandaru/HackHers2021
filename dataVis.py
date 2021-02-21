@@ -40,32 +40,48 @@ df = df.reset_index([0, 'iso_code'])
 
 df.columns = ['iso_code', 'vaccine']
 
+print("splitting done")
+
+#merge df with iso_df so we have the iso code for the countries listed:
+df=pd.merge(df, iso_df, left_on="iso_code", right_on="Alpha-3 code")  #merge county an survey on fibs
+df.drop(['Alpha-2 code','Alpha-3 code', 'Numeric code', 'ISO 3166-2'], axis=1, inplace=True)
+df['use'] = 1
+
+df = df.rename(columns = {'English short name lower case':'location'})
 #merge df with iso_df so we have the iso code for the countries listed:
 #df=pd.merge(vaccine_df, iso_df, left_on="location", right_on="English short name lower case")  #merge county an survey on fibs
 #df.drop(['English short name lower case', 'Alpha-2 code', 'Numeric code', 'ISO 3166-2'], axis=1, inplace=True)
+pd.set_option('display.max_rows', df.shape[0]+1)
+
 print(df)
+
+print('\n \n')
+df.sort_values('vaccine')
+print(df)
+
 print("-----------------------------------------------------------")
 # df_sorted = df.sort_values(by='vaccine')
 # print(df_sorted)
 # vaccineGroups = df.groupby(['vaccine'])
 # print(vaccineGroups[])
 print("----------------------********-------------------------------------")
+#df_pfizer =df.loc[df['vaccine']=='Pfizer/BioNtech']
 df_pfizer = df[df['vaccine'] == 'Pfizer/BioNTech']
-df_pfizer.drop(['date'], axis=1, inplace=True)
+#df_pfizer.drop(['date'], axis=1, inplace=True)
 print(df_pfizer)
 # df_pfizer.groupby(['total_vaccinations'])
 # print(df_pfizer['total_vaccinations'].aggregate({'total_vaccinations': np.sum}))
 
 df_sinovac = df[df['vaccine'] == 'Sinovac']
-df_sinovac.drop(['date'], axis=1, inplace=True)
+#df_sinovac.drop(['date'], axis=1, inplace=True)
 print(df_sinovac)
 
 df_moderna = df[df['vaccine'] == 'Moderna']
-df_moderna.drop(['date'], axis=1, inplace=True)
+#df_moderna.drop(['date'], axis=1, inplace=True)
 print(df_moderna)
 
 df_oxford = df[df['vaccine'] == 'Oxford/AstraZeneca']
-df_oxford.drop(['date'], axis=1, inplace=True)
+#df_oxford.drop(['date'], axis=1, inplace=True)
 print(df_oxford)
 
 # df_today = df.loc[df['date'] == df_sorted["date"][0]]
@@ -73,8 +89,8 @@ print(df_oxford)
 print("-----------------------------------------------------------")
 figure = go.Figure(
     data=go.Choropleth(
-        z=df_oxford['total_vaccinations'], #country the vaccine is used in
-        locations=df_oxford['Alpha-3 code'],
+        z=df_oxford['use'], #country the vaccine is used in
+        locations=df_oxford['iso_code'],
         text=df_oxford['location'],
         locationmode="ISO-3",
         autocolorscale=True,
@@ -116,8 +132,9 @@ def update_fig(value):
     print("value passed in: " + str(value))
     figure = go.Figure(
         data=go.Choropleth(
-            z=df_update['total_vaccinations'],
-            locations=df_update['Alpha-3 code'],
+            z=df_update['use'],
+            locations=df_update['iso_code'],
+            text=df_oxford['location'],
             locationmode="ISO-3",
             autocolorscale=True,
         )
