@@ -7,5 +7,13 @@ import matplotlib.pyplot as plot
 vaccinations_df = pd.read_csv("vaccinations.csv")
 result=pd.pivot_table(vaccinations_df,index=["location"],values=["total_vaccinations"],aggfunc='sum')
 print(result.head(30))
+
 # grouped = vaccinations_df.groupby(['location', 'total_vaccinations'])
 # print(grouped[['location']].aggregate({'Open':np.mean, 'Volume':np.min}))
+
+vaccinations_df.groupby(['location']).tail(1)
+
+result=pd.pivot_table(vaccinations_df,index=["location"],values=["total_vaccinations"],aggfunc='sum')
+print(vaccinations_df)
+
+country_pop_df = pd.read_csv("")
