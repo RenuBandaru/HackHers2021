@@ -137,7 +137,7 @@ vaccineOptions=['Covaxin', 'Johnson&Johnson', 'Moderna', 'Oxford/AstraZeneca', '
                 'Sinopharm/Wuhan', 'Sinovac', 'Sputnik']
 app.layout = html.Div(
     [
-        html.H1("HackHers Covid Dashboard (Global ._.)"),
+        html.H1("HackHers COVID-19 Dashboard (Global Version 🌏)"),
         dcc.Graph(
             id='main_graph',
             figure=figure,
