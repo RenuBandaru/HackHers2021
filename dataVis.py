@@ -1,8 +1,3 @@
-# Dash components - makes it easy to format things
-
-# print("testing...")
-
-# Pandas - allows to manipulate the data easily
 import pandas as pd
 
 print("Pandas imported!")
@@ -19,28 +14,26 @@ import plotly.express as px
 import plotly.offline as po
 print("Plotly imported!")
 
-import folium
-world = folium.Map(location=[0,0], zoom_start=2)
-print("folium imported!")
+# import folium
+# world = folium.Map(location=[0,0], zoom_start=2)
+# print("folium imported!")
 
 import numpy as np
 
+#dash app
 app = dash.Dash()
+
+#dataframes from gathered data
 vaccine_df = pd.read_csv("vaccinations-by-manufacturer.csv")
 iso_df = pd.read_csv("wikipedia-iso-country-codes.csv")
 location_df = pd.read_csv("locations.csv")
 
-#print(vaccine_df)
-
+#remove unneeded columns
 location_df.drop(['last_observation_date','source_name','source_website'],axis=1,inplace=True)
 
+#dataframe formatting
 df = pd.DataFrame(location_df.vaccines.str.split(',').tolist(), index=location_df.iso_code).stack()
-print(df)
-
 df = df.reset_index([0, 'iso_code'])
-print(df)
-
-print("*****")
 df.columns = ['iso_code', 'vaccine']
 print(df)
 
@@ -61,27 +54,6 @@ pd.set_option('display.max_rows', df.shape[0]+1)
 #df.drop(['Alpha-3 code','Alpha-2 code', 'Numeric code', 'ISO 3166-2','English short name lower case'], axis=1, inplace=True)
 #df['use'] = 1
 
-print("final DF: ^^^^^^^^^^^^^^^^^^^")
-#pd.set_option('display.max_rows', df.shape[0]+1)
-print(df)
-
-#print('\n \n')
-#df.sort_values('vaccine')
-#print(df)
-
-print("-----------------------------------------------------------")
-# df_sorted = df.sort_values(by='vaccine')
-# print(df_sorted)
-# vaccineGroups = df.groupby(['vaccine'])
-# print(vaccineGroups[])
-print("----------------------********-------------------------------------")
-#df_pfizer =df.loc[df['vaccine']=='Pfizer/BioNtech']
-
-print("\n")
-print("\n" + "ORIGINAL DATAFRAME !!!!!!!!!!!!!!!!!!!!!!!!")
-print(df)
-
-print("----------------------****VACCINE DFS: ****-------------------------------------")
 
 #set up dataframes for each vaccine so map can be displayed
 df_covaxin = df[df['vaccine'] == 'Covaxin']
@@ -94,15 +66,16 @@ df_jj = df[df['vaccine'] == 'Johnson&Johnson']
 print(df_jj)
 print("\n")
 
+
+df_moderna = df[df['vaccine'] == 'Moderna']
+#df_moderna.drop(['date'], axis=1, inplace=True)
+print(df_moderna)
+
 df_moderna = df[df['vaccine'] == 'Moderna']
 #df_moderna.drop(['date'], axis=1, inplace=True)
 print(df_moderna)
 
 print("\n")
-
-
-print("\n")
-
 
 df_oxford = df[df['vaccine'] == 'Oxford/AstraZeneca']
 #df_oxford.drop(['date'], axis=1, inplace=True)
@@ -146,7 +119,7 @@ print("\n")
 
 # df_today = df.loc[df['date'] == df_sorted["date"][0]]
 # print(df_today)
-print("-----------------------------------------------------------")
+#print("-----------------------------------------------------------")
 #initial dash setup
 figure = go.Figure(
     data=go.Choropleth(
@@ -155,13 +128,26 @@ figure = go.Figure(
         locations=df_pfizer['iso_code'],
         text=df_pfizer['English short name lower case'],
         locationmode="ISO-3",
-        autocolorscale=True,
+        colorscale='Blues',
 
     )
 )
-
+#visual attributes:
+figure.add_layout_image(
+        dict(
+            source="https://staticwordpress.s3.amazonaws.com/blog.luxuryhomemarketing.com/uploads/2020/03/Bonus_BP01-Power-Market-Photo-scaled.jpg",
+            xref="x",
+            yref="y",
+            x=0,
+            y=3,
+            sizex=2,
+            sizey=2,
+            sizing="stretch",
+            opacity=0.1,
+            layer="below")
+)
 figure.update_layout(
-    title_text="Vaccinations - Oxford",
+    title_text="Which vaccines are used and in which countries?",
     geo_scope='world',
 )
 #dropdown menu options
@@ -169,7 +155,9 @@ vaccineOptions=['Covaxin', 'Johnson&Johnson', 'Moderna', 'Oxford/AstraZeneca', '
                 'Sinopharm/Wuhan', 'Sinovac', 'Sputnik']
 app.layout = html.Div(
     [
+
         html.H1("HackHers Covid Dashboard (Global Version 🌏)"),
+
         dcc.Graph(
             id='main_graph',
             figure=figure,
@@ -177,9 +165,30 @@ app.layout = html.Div(
         dcc.Dropdown(
             id='data_select',
             options=[{'label': col, 'value': col} for col in vaccineOptions]
+        ),
+        html.H1("Which country is vaccinating a larger percent of its population?"),
+        html.Div(
+            children=html.Img(
+                src="https://raw.githubusercontent.com/RenuBandaru/HackHers2021/main/Ques_3.png",
+                style={
+                    'maxWidth': '100%',
+                    'maxHeight': '100%',
+                    'marginLeft': 'auto',
+                    'marginRight': 'auto'
+                }
+            ),
+            style={
+                'maxWidth': '100%',
+                'maxHeight': '100%',
+                'marginLeft': 'auto',
+                'marginRight': 'auto',
+                'border': 'thin grey solid'
+            }
         )
+
     ])
 #use this to map input to the correct dataframe
+
 vaccineDict = {
         "Covaxin": df_covaxin,
         "Johnson&Johnson": df_jj,
