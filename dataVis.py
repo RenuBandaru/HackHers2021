@@ -37,13 +37,25 @@ df = df.reset_index([0, 'iso_code'])
 df.columns = ['iso_code', 'vaccine']
 print(df)
 
+print("splitting done")
+
 #merge df with iso_df so we have the iso code for the countries listed:
 df=pd.merge(df, iso_df, left_on="iso_code", right_on="Alpha-3 code")  #merge county an survey on fibs
-df.drop(['Alpha-3 code','Alpha-2 code', 'Numeric code', 'ISO 3166-2'], axis=1, inplace=True)
+df.drop(['Alpha-2 code','Alpha-3 code', 'Numeric code', 'ISO 3166-2'], axis=1, inplace=True)
 df['use'] = 1
 
-#print("----------------------****VACCINE DFS: ****-------------------------------------")
+#df = df.rename(columns = {'English short name lower case':'location'})
+#merge df with iso_df so we have the iso code for the countries listed:
+#df=pd.merge(vaccine_df, iso_df, left_on="location", right_on="English short name lower case")  #merge county an survey on fibs
+#df.drop(['English short name lower case', 'Alpha-2 code', 'Numeric code', 'ISO 3166-2'], axis=1, inplace=True)
+pd.set_option('display.max_rows', df.shape[0]+1)
 
+#df=pd.merge(df, iso_df, left_on="iso_code", right_on="Alpha-3 code")  #merge county an survey on fibs
+#df.drop(['Alpha-3 code','Alpha-2 code', 'Numeric code', 'ISO 3166-2','English short name lower case'], axis=1, inplace=True)
+#df['use'] = 1
+
+
+#set up dataframes for each vaccine so map can be displayed
 df_covaxin = df[df['vaccine'] == 'Covaxin']
 #df_moderna.drop(['date'], axis=1, inplace=True)
 print(df_covaxin)
@@ -59,12 +71,19 @@ df_moderna = df[df['vaccine'] == 'Moderna']
 #df_moderna.drop(['date'], axis=1, inplace=True)
 print(df_moderna)
 
+df_moderna = df[df['vaccine'] == 'Moderna']
+#df_moderna.drop(['date'], axis=1, inplace=True)
+print(df_moderna)
+
+print("\n")
+
 df_oxford = df[df['vaccine'] == 'Oxford/AstraZeneca']
 #df_oxford.drop(['date'], axis=1, inplace=True)
 print(df_oxford)
 print("\n")
 
 df_pfizer = df[df['vaccine'] == 'Pfizer/BioNTech']
+#df_pfizer = df.loc[df['vaccine']] == ['Pfizer/BioNTech']
 #df_pfizer.drop(['date'], axis=1, inplace=True)
 print(df_pfizer)
 print("\n")
@@ -76,7 +95,7 @@ df_sinopharmB = df[df['vaccine'] == 'Sinopharm/Beijing']
 print(df_sinopharmB)
 print("\n")
 
-df_sinopharmW = df[df['vaccine'] == 'Sinopharm/Beijing']
+df_sinopharmW = df[df['vaccine'] == 'Sinopharm/Wuhan']
 #df_sinovac.drop(['date'], axis=1, inplace=True)
 print(df_sinopharmW)
 print("\n")
@@ -86,17 +105,28 @@ df_sinovac = df[df['vaccine'] == 'Sinovac']
 print(df_sinovac)
 print("\n")
 
+df_moderna = df[df['vaccine'] == 'Moderna']
+#df_moderna.drop(['date'], axis=1, inplace=True)
+print(df_moderna)
+
+df_oxford = df[df['vaccine'] == 'Oxford/AstraZeneca']
+#df_oxford.drop(['date'], axis=1, inplace=True)
+print(df_oxford)
 df_sputnik = df[df['vaccine'] == 'Sputnik V']
 #df_sinovac.drop(['date'], axis=1, inplace=True)
 print(df_sputnik)
 print("\n")
 
+# df_today = df.loc[df['date'] == df_sorted["date"][0]]
+# print(df_today)
 #print("-----------------------------------------------------------")
+#initial dash setup
 figure = go.Figure(
     data=go.Choropleth(
-        z=df_oxford['use'], #country the vaccine is used in
-        locations=df_oxford['iso_code'],
-        text=df_oxford['English short name lower case'],
+
+        z=df_pfizer['use'], #country the vaccine is used in
+        locations=df_pfizer['iso_code'],
+        text=df_pfizer['English short name lower case'],
         locationmode="ISO-3",
         colorscale='Blues',
 
@@ -120,12 +150,14 @@ figure.update_layout(
     title_text="Which vaccines are used and in which countries?",
     geo_scope='world',
 )
-
+#dropdown menu options
 vaccineOptions=['Covaxin', 'Johnson&Johnson', 'Moderna', 'Oxford/AstraZeneca', 'Pfizer/BioNTech', 'Sinopharm/Beijing',
                 'Sinopharm/Wuhan', 'Sinovac', 'Sputnik']
 app.layout = html.Div(
     [
-        html.H1("HackHers COVID-19 Dashboard (Global Version 🌏)"),
+
+        html.H1("HackHers Covid Dashboard (Global Version 🌏)"),
+
         dcc.Graph(
             id='main_graph',
             figure=figure,
@@ -154,9 +186,9 @@ app.layout = html.Div(
             }
         )
 
-
     ])
-#use this to map input to the correct dataframe based on input
+#use this to map input to the correct dataframe
+
 vaccineDict = {
         "Covaxin": df_covaxin,
         "Johnson&Johnson": df_jj,
@@ -177,11 +209,10 @@ def update_fig(value):
     print("value passed in: " + str(value))
     figure = go.Figure(
         data=go.Choropleth(
-            z=df_update['use'],  # country the vaccine is used in
+            z=df_update['use'],
             locations=df_update['iso_code'],
-            text=df_update['English short name lower case'],
-            locationmode="ISO-3",
-            autocolorscale=True,
+            text=df_oxford['English short name lower case'],
+            autocolorscale=True,            
         )
     )
     figure.update_layout(
